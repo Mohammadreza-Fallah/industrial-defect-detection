@@ -1,11 +1,25 @@
 """
-PyTorch Dataset for the NEU Surface Defect Database.
+PyTorch Dataset for the NEU Surface Defect Database (object-detection
+distribution — images + Pascal-VOC-style XML annotations).
 
-Supports two common folder layouts:
+Expected folder layout (as shipped by the "NEU-DET" Kaggle release):
 
-1. Flat:      data/raw/NEU-DET/<ClassName>/*.jpg
-2. Split:     data/raw/NEU-DET/train/<ClassName>/*.jpg
-              data/raw/NEU-DET/validation/<ClassName>/*.jpg
+    <root_dir>/               (e.g. NEU-DET/train or NEU-DET/validation)
+    ├── images/
+    │   ├── crazing/*.jpg
+    │   ├── inclusion/*.jpg
+    │   ├── patches/*.jpg
+    │   ├── pitted_surface/*.jpg
+    │   ├── rolled-in_scale/*.jpg
+    │   └── scratches/*.jpg
+    └── annotations/
+        ├── crazing_1.xml
+        ├── patches_35.xml
+        └── ...              (flat, one XML per image, prefixed by class)
+
+For Phase 1/2 (classification), only the `images/` folder is used — the
+class is taken from the subfolder name. The `annotations/` XML files
+(bounding boxes) are reserved for Phase 3 (detection) and not parsed here.
 
 See docs/dataset.md for download instructions and class descriptions.
 """
@@ -22,12 +36,12 @@ from torch.utils.data import Dataset
 from src.utils.preprocessing import load_grayscale, normalize, resize
 
 CLASS_NAMES = [
-    "Crazing",
-    "Inclusion",
-    "Patches",
-    "Pitted_Surface",
-    "Rolled-in_Scale",
-    "Scratches",
+    "crazing",
+    "inclusion",
+    "patches",
+    "pitted_surface",
+    "rolled-in_scale",
+    "scratches",
 ]
 
 
@@ -35,8 +49,8 @@ class NEUDataset(Dataset):
     """Loads NEU-DET images and their class labels.
 
     Args:
-        root_dir: path to the NEU-DET folder (flat layout), or to
-            NEU-DET/train or NEU-DET/validation (split layout).
+        root_dir: path to NEU-DET/train or NEU-DET/validation (the folder
+            that directly contains an `images/` subfolder).
         image_size: (width, height) to resize images to.
         transform: optional callable applied to the normalized image
             (e.g. torchvision augmentations).
@@ -49,14 +63,24 @@ class NEUDataset(Dataset):
         transform=None,
     ):
         self.root_dir = Path(root_dir)
+        self.images_dir = self._resolve_images_dir(self.root_dir)
         self.image_size = image_size
         self.transform = transform
         self.samples: list[tuple[str, int]] = self._index_samples()
 
+    @staticmethod
+    def _resolve_images_dir(root_dir: Path) -> Path:
+        """Supports both `root_dir/images/<class>/...` (this dataset's
+        actual layout) and a flat `root_dir/<class>/...` layout, in case
+        a differently-packaged copy of NEU-DET is used later."""
+        if (root_dir / "images").is_dir():
+            return root_dir / "images"
+        return root_dir
+
     def _index_samples(self) -> list[tuple[str, int]]:
         samples = []
         for class_idx, class_name in enumerate(CLASS_NAMES):
-            class_dir = self.root_dir / class_name
+            class_dir = self.images_dir / class_name
             if not class_dir.is_dir():
                 continue
             for fname in os.listdir(class_dir):
@@ -65,7 +89,7 @@ class NEUDataset(Dataset):
 
         if not samples:
             raise FileNotFoundError(
-                f"No images found under {self.root_dir}. "
+                f"No images found under {self.images_dir}. "
                 "Check the folder layout described in docs/dataset.md — "
                 "did you download and place the NEU-DET dataset yet?"
             )
