@@ -1,0 +1,7 @@
+# Exclude Jupyter notebooks from GitHub's repo-language statistics.
+# Notebooks store rendered outputs (plots, confusion matrices) as
+# embedded base64 data, which inflates their byte count and can make
+# GitHub report "Jupyter Notebook" as the repo's primary language even
+# when most of the actual logic lives in .py files. This keeps the
+# language stat focused on the Python source.
+*.ipynb linguist-detectable=false
