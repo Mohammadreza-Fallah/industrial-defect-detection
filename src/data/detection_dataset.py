@@ -43,12 +43,17 @@ class DetectionDataset(Dataset):
     Args:
         root_dir: path to NEU-DET/train or NEU-DET/validation (the
             folder that contains `images/` and `annotations/`).
+        to_3channel: if True (default), repeats the grayscale channel
+            3x so images are compatible with ImageNet-pretrained
+            backbones (e.g. the ResNet50 inside Faster R-CNN), which
+            expect 3-channel input. Set False for single-channel models.
     """
 
-    def __init__(self, root_dir: str):
+    def __init__(self, root_dir: str, to_3channel: bool = True):
         self.root_dir = Path(root_dir)
         self.images_dir = self.root_dir / "images"
         self.annotations_dir = self.root_dir / "annotations"
+        self.to_3channel = to_3channel
 
         samples = []
         for class_name in CLASS_NAMES:
@@ -76,6 +81,8 @@ class DetectionDataset(Dataset):
         img = load_grayscale(str(img_path))
         img = normalize(img)
         img_tensor = torch.from_numpy(img).unsqueeze(0)  # (1, H, W)
+        if self.to_3channel:
+            img_tensor = img_tensor.repeat(3, 1, 1)  # (1, H, W) -> (3, H, W)
 
         annotation = parse_annotation(ann_path)
         boxes, labels = [], []
