@@ -1,0 +1,28 @@
+# Environment pins for the CUDA/GPU setup (.venv312).
+#
+# Why the pins: torch 2.3.1+cu118 was compiled against NumPy 1.x, so it
+# cannot run with NumPy 2.x ("Failed to initialize NumPy: _ARRAY_API not
+# found"). That version of torch is itself required here because it's the
+# newest cu118 build that works with a Pascal-generation GPU (MX330,
+# compute capability 6.1). So the whole stack must stay on the NumPy 1.x
+# era — the versions below are the last releases of each package that
+# support numpy<2.
+#
+# Install torch FIRST, from the PyTorch index, then this file:
+#   pip install torch==2.3.1 torchvision==0.18.1 --index-url https://download.pytorch.org/whl/cu118
+#   pip install -r requirements-gpu.txt
+
+numpy==1.26.4
+scipy==1.13.1
+opencv-python==4.10.0.84
+scikit-image==0.24.0
+tifffile==2024.8.30
+scikit-learn==1.5.2
+pandas==2.2.3
+matplotlib==3.9.2
+seaborn==0.13.2
+pillow==10.4.0
+streamlit==1.39.0
+tqdm==4.66.5
+pytest==8.3.3
+ipykernel==6.29.5
