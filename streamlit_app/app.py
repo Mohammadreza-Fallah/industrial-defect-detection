@@ -133,10 +133,10 @@ scores = prediction["scores"][keep].cpu()
 col1, col2 = st.columns(2)
 with col1:
     st.subheader("Original")
-    st.image(image, use_container_width=True)
+    st.image(image, use_column_width=True)
 with col2:
     st.subheader("Detections")
-    st.image(draw_detections(image, boxes, labels, scores), use_container_width=True)
+    st.image(draw_detections(image, boxes, labels, scores), use_column_width=True)
 
 st.subheader("Results")
 if len(boxes) == 0:

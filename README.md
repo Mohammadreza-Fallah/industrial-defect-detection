@@ -117,6 +117,20 @@ Unlike the Phase 2 classification figure, this mAP is not inflated by the
 dataset's near-duplicate leakage: localization is a substantially harder
 task, and 0.74 is a realistic, defensible number for this setup.
 
+## Interactive Demo
+
+```bash
+streamlit run streamlit_app/app.py
+```
+
+Upload a steel-surface image and the fine-tuned detector returns bounding
+boxes with class labels and confidence scores. A sidebar slider controls
+the confidence threshold, so the precision/recall trade-off can be
+explored interactively. The trained weights are committed to `models/`,
+so the demo runs immediately after cloning — no training required.
+
+![Streamlit demo](docs/streamlit_demo.png)
+
 ## Known Data Limitations
 
 Investigation via perceptual hashing (`notebooks/04_data_leakage_check.ipynb`,
@@ -152,7 +166,7 @@ than per-crop).
 - [x] Phase 2 — Baseline CNN classifier + ResNet18 transfer-learning comparison
 - [x] Phase 2b — Data-quality audit (train/val leakage check)
 - [x] Phase 3 — Faster R-CNN detection on XML bounding-box annotations
-- [ ] Phase 4 — Streamlit demo wired up to the trained detection model
+- [x] Phase 4 — Streamlit demo wired up to the trained detection model
 - [ ] Phase 5 — Polish: tests, CI, final documentation
 
 ## Setup
@@ -169,9 +183,9 @@ versions are pinned.
 
 ## Status
 
-Phases 1–3 complete: classification and detection models trained and
-evaluated, with a documented data-quality caveat. Phase 4 (interactive
-demo) next.
+Phases 1–4 complete: classification and detection models trained and
+evaluated, with a documented data-quality caveat, plus a working
+interactive demo. Phase 5 (tests, CI, final polish) remaining.
 
 ## Author
 
