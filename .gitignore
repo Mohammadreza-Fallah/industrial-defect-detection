@@ -4,11 +4,21 @@ data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 
-# Models
+# Models — weights are excluded by default, except the trained detector,
+# which is committed so the Streamlit demo works straight after cloning.
 models/*.pt
 models/*.pth
 models/*.onnx
+!models/fasterrcnn.pt
 !models/.gitkeep
+
+# Virtual environments (any name)
+venv/
+.venv*/
+env/
+
+# Leftover pip temp dirs (Windows)
+~*/
 
 # Python
 __pycache__/
@@ -16,10 +26,6 @@ __pycache__/
 *.egg-info/
 .ipynb_checkpoints/
 .pytest_cache/
-venv/
-.venv*/
-env/
-~*/
 *.log
 
 # OS / IDE
