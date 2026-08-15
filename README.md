@@ -1,5 +1,7 @@
 # Industrial Defect Detection
 
+![CI](https://github.com/Mohammadreza-Fallah/industrial-defect-detection/actions/workflows/ci.yml/badge.svg)
+
 End-to-end computer vision pipeline for classifying **and localizing**
 surface defects on steel, using classical image processing (OpenCV) and
 deep learning (PyTorch), with an interactive Streamlit demo.
@@ -167,7 +169,7 @@ than per-crop).
 - [x] Phase 2b — Data-quality audit (train/val leakage check)
 - [x] Phase 3 — Faster R-CNN detection on XML bounding-box annotations
 - [x] Phase 4 — Streamlit demo wired up to the trained detection model
-- [ ] Phase 5 — Polish: tests, CI, final documentation
+- [x] Phase 5 — Polish: tests, CI, final documentation
 
 ## Setup
 
@@ -183,9 +185,9 @@ versions are pinned.
 
 ## Status
 
-Phases 1–4 complete: classification and detection models trained and
-evaluated, with a documented data-quality caveat, plus a working
-interactive demo. Phase 5 (tests, CI, final polish) remaining.
+Complete. Classification and detection models trained and evaluated with
+a documented data-quality audit, an interactive Streamlit demo, unit
+tests, and CI.
 
 ## Author
 
